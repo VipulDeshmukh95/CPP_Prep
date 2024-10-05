@@ -1,0 +1,117 @@
+// Below is the header file and the implementation for Mystring class
+// Header file
+
+#ifndef _MYSTRING_H_   //pre processor directive used as header guards. This line checks if the macro _MYSTRING_H_ is not defined. If its not defined, 	the code between #ifndef and #endif is included in the compilation 
+#define _MYSTRING_H_//This directive defines the macro _MYSTRING_H_
+
+//Below will be the code contents (Header file contents) which will be included for the compilation if macro _MYSTRING_H_ is not defined
+class Mystring
+{
+   friend std::ostream &operator<< (std::ostream &os, const Mystring &rhs); //friend functions have access to class's private and protected class members
+   friend std::istream &operator>> (std::istream &is, Mystring &rhs);
+   
+private:
+   char* str;  //pointer to char[] object in heap that holds the c-style string
+   
+public:
+   Mystring();   //no args constructor
+   Mystring(const char *s);  //overloaded single arg constructor
+   Mystring(const Mystring &source); //copy constructor
+   Mystring(Mystring &&source);  //Move constructor
+   ~Mystring()   //Destuctor
+   
+   Mystring &operator=(const Mystring &rhs)  //copy assignment
+   Mystring &operator=(Mystring &&rhs) //move assignment   
+   
+   void display() const; // for displaying on console
+
+   //getters
+   int get_length() const;     
+   const char* get_str() const;
+
+   //Operators overloading
+   Mystring operator-();   //make lowercase
+   Mystring operator+(const Mystring &rhs);   //concatenate
+   bool operator== (const Mystring &rhs); //equals   
+   bool operator!= (const Mystring &rhs); //not equals   
+   bool operator< (const Mystring &rhs); //less than   
+   bool operator> (const Mystring &rhs); //greater than
+   Mystring &operator+=(const Mystring &rhs); // s1 += s2 concat and assign
+   Mystring operator*(int n) const; // s2 = s1*3  string repetition
+   Mystring &operator*=(int n);    // s1 *= 3 , s1 = s1 * 3;
+   Mystring &operator++();    //++s1
+   Mystring operator++(int);    //s1++
+	  
+}
+
+#endif //_MYSTRING_H_ This directive closes the conditional block started by #ifndef directive
+/*How this above code works? when the header file is included in the code, the prereprocessor checks if the corresponding eader guard macro is already defined. if it is not defined then the section of code(i.e header class contents) is included for the compilation of code. If it is already defined(and compiled before) it skips it and prevents it from including it multiple times for compilation
+This helps in preventing errors from arising due to multiple definition of same entities. */
+
+
+/*
+1. preprocessor directive 
+2. stream insertion operator as friend 
+3. stream extraction operator as friend
+3. private data member - char pointer to object
+4. public member functions: constructor, single arg constructor, copy constructor, move constructor
+5. assignment operator copy and move
+6. destructor
+7. display function , getters - getlenggth of string and get pointer to string class object
+8. Operators overloading - make lowercase, concatenate, concatenate and assign, repeat string and repeat and assign
+9. equals and not equals
+10. greater than and less than
+11. post increment and pre increment  */
+
+
+//Class implementation
+#include <iostream>
+#include <cstring>
+#include "Mystring.h"
+
+
+//friend stream insertion operator
+std::ostream Mystring::&operator<<(std::ostream &os, const Mystring &rhs)
+{
+	os << rhs.str;
+	return os;
+}
+
+//friend stream extraction operator
+std::istream Mystring::&operator>>(std::istream &is, Mystring &rhs)
+{
+	char* buff = new char[1000];
+	in >> buff;
+	rhs = MyString(buff);
+	delete [] buff;
+	return is;
+}
+
+//constructor with no args
+Mystring::Mystring()
+    :str(nullptr)
+{
+	std::cout << "No args constructor " << std::endl;
+	str = new char[1];  //dynamically allocates a memory for a single character using new 
+	*str = '\0'; //initializes the first character of allocated memory with terminator '\0'. This terminator marks the ending of the string
+}
+
+//overloaded single arg constructor
+Mystring::Mystring(const char *s)
+    :str(nullptr)
+{ 
+    std::cout << "Overloaded single arg constructor" << std::endl;
+    if(s == nullptr)
+	{
+	    str = new char[1];
+		*str = '\0';
+	}
+	else
+	{
+		a
+	}
+}
+		
+
+
+
