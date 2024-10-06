@@ -1,4 +1,3 @@
-// Below is the header file and the implementation for Mystring class
 // Header file
 
 #ifndef _MYSTRING_H_   //pre processor directive used as header guards. This line checks if the macro _MYSTRING_H_ is not defined. If its not defined, 	the code between #ifndef and #endif is included in the compilation 
@@ -108,10 +107,242 @@ Mystring::Mystring(const char *s)
 	}
 	else
 	{
-		a
+		str = new char[strlen(s)+1];
+		stpcpy(str, s);
 	}
 }
 		
+//copy constructor
+MyString::Mystring(const Mystring &source)
+           :str(nullptr)
+{   
+     str = new char[strlen(source.str) + 1];
+	 strcpy(str, source.str);
+}
+
+//Move constructor
+MyString::Mystring(Mystring &&source)
+       :str(source.str)
+	   {
+		   source.str = nullptr;
+	   }
+	   
+//destructor
+Mystring::~Mystring()
+{
+	std::cout << "Destuctor is called" << std::endl;
+	delete [] str;
+}
+
+//Copy Assignment
+MyString &MyString::operator=(const Mystring &rhs)
+{
+	if(this == &rhs)
+		return *this;
+	delete [] str;
+	str = new char[strlen(rhs.str) + 1];
+	strcpy(str, rhs.str);
+	return *this;
+}		
+
+MyString &Mystring::operator=(Mystring &&rhs)
+{
+	if(this == &rhs)
+		return *this;
+    delete [] str;
+	str = rhs.str;
+	rhs.str = nullptr;
+	return *this;
+}
+
+//getters
+void Mystring::display() const{
+	std::cout << str << " : " << get_length() << std::endl;
+}
+
+int MyString::get_length() { return strlen(str);}
+const char *Mystring::get_str() const {return str;}
+	
+	
+//operator overloading
+
+//equals
+bool Mystring::operator==(const Mystring &rhs) const
+{
+	return (std::strcmp(str, rhs.str) == 0);
+}
+
+//not equals
+bool MyString::operator!=(const Mystring &rhs) const
+{
+	return !(std::strcmp(str, rhs.str) == 0);
+}
+
+//less than
+bool Mystring::operator<(const Mystring &rhs) const
+{
+	return (std::strcmp(str, rhs.str) < 0);
+}
+
+
+//greater than
+bool Mystring::operator>(const Mystring &rhs) const 
+{
+	return (std::strcmp(str, rhs.str) > 0);
+}
+
+//make lowercase
+Mystring MyString::operator-() const
+{
+	char *buff = new char[strlen(str)+1];
+	strcpy(buff, str);
+	for(size_t i = 0; i < strlen(buff); << i++)
+	{
+		buff[i] = std::tolower(buff[i]);
+	}
+	Mystring temp(buff);
+	delete [] buff;
+	return temp;
+}
+
+//concatenate
+Mystring Mystring::operator+(const Mystring &rhs) const
+{
+	char *buff = new char[strlen(str) + strlen(rhs.str) + 1];
+	strcpy(buff, str);
+	strcat(buff, rhs.str);
+	Mystring temp(buff);
+    delete [] buff;
+    return temp;
+}	
+
+//concatenate and assign +=   s1 += s2, s1 = s1 + s2
+Mystring &Mystring::operator+=(const Mystring &rhs) 
+{
+	*this = *this + rhs;
+	return *this;
+}
+
+//repeat
+Mystring Mystring::operator*(int n) const
+{
+	Mystring temp;
+	for(int i = 1; i <= n; i++)
+	{
+	   temp = temp + *this;
+	}
+	return temp;
+}
+
+//repeat and assign     s1 *= 3 , s1 = s1 * 3; 
+Mystring &Mystring::operator*=(int n)
+{
+    *this = *this * n;
+	return *this;
+}	
+
+//Pre increment - make the string upper case
+Mystring &Mystring::operator++()
+{
+	for(size_t i = 0; i < strlen(str); i++)
+	{
+		str[i] = std::toupper(str[i]);
+	}
+	return *this;
+}	
+
+//post increment - make the string upper case
+Mystring Mystring::operator++(int n)
+{
+   Mystring temp(*this);
+   operator++();
+   return temp;
+}	
+
+//main cpp
+#include <iostream>
+#include "Mystring.h"
+
+using namespace std;
+
+int main() {
+    
+    cout << boolalpha << endl;
+    Mystring a {"frank"};
+    Mystring b {"frank"};
+    cout << (a==b) << endl;         // true
+    cout << (a!=b) << endl;           // false
+    
+    b = "george";
+    cout << (a==b) << endl;         // false
+    cout << (a!=b) << endl;          // true
+     cout << (a<b) << endl;         // true
+    cout << (a>b) << endl;          // false
+    
+    Mystring s1 {"FRANK"};
+    s1 = -s1;       
+    cout << s1 << endl;             // frank              
+
+    s1 = s1 + "*****";
+    cout << s1 << endl;             // frank*****       
+    
+    s1 += "-----";                      // frank*****-----
+    cout << s1 << endl;
+    
+    Mystring s2{"12345"};
+    s1 = s2 * 3;
+    cout << s1 << endl;           // 123451234512345
+    
+    Mystring s3{"abcdef"};  
+    s3 *= 5;
+    cout << s3 << endl;             // abcdefabcdefabcdefabcdefabcdef
+    
+    Mystring repeat_string;
+    int repeat_times;
+    cout << "Enter a string to repeat: " << endl;
+    cin >> repeat_string;
+    cout << "How many times would you like it repeated? " << endl;
+    cin >> repeat_times;
+    repeat_string *= repeat_times;
+    cout << "The resulting string is: " << repeat_string << endl;
+    
+    cout << (repeat_string * 12) << endl;
+    
+    repeat_string = "RepeatMe";
+    cout << (repeat_string + repeat_string + repeat_string) << endl;
+    
+    repeat_string += (repeat_string * 3);
+    cout << repeat_string << endl;
+    
+    repeat_string = "RepeatMe";
+    repeat_string += (repeat_string + repeat_string + repeat_string);
+
+
+  Mystring s = "Frank";
+    ++s;
+    cout << s << endl;                  // FRANK
+    
+    s = -s; 
+    cout << s << endl;                  // frank
+    Mystring result;
+    result = ++s;                           
+    cout << s << endl;                  // FRANK
+    cout << result << endl;           // FRANK
+    
+    s = "Frank";
+    s++;
+    cout << s << endl;                  // FRANK
+    
+    s = -s;
+    cout << s << endl;                  // frank
+    result = s++;
+    cout << s << endl;                  // FRANK
+    cout << result << endl;           // frank
+    return 0;
+}	
+	
+	
+	
 
 
 
